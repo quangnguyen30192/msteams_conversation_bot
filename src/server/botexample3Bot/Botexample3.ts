@@ -1,9 +1,12 @@
 import { BotDeclaration } from "express-msteams-host";
 import * as debug from "debug";
 import { DialogSet, DialogState } from "botbuilder-dialogs";
-import { StatePropertyAccessor, CardFactory, TurnContext, MemoryStorage, ConversationState, ActivityTypes, TeamsActivityHandler } from "botbuilder";
+import { StatePropertyAccessor, CardFactory, TurnContext, MemoryStorage, ConversationState, ActivityTypes, TeamsActivityHandler, MessageFactory } from "botbuilder";
 import HelpDialog from "./dialogs/HelpDialog";
 import WelcomeCard from "./dialogs/WelcomeDialog";
+import * as Util from "util";
+const TextEncoder = Util.TextEncoder;
+
 // Initialize debug logging module
 const log = debug("msteams");
 
@@ -48,6 +51,8 @@ export class Botexample3 extends TeamsActivityHandler {
                         } else if (text.startsWith("help")) {
                             const dc = await this.dialogs.createContext(context);
                             await dc.beginDialog("help");
+                        } else if (text.startsWith(("mentionme"))){
+                           await this.handleMessageMentionMeOneOnOne(context);
                         } else {
                             await context.sendActivity("I'm terribly sorry, but my developer hasn't trained me to do anything yet...");
                         }
@@ -80,6 +85,18 @@ export class Botexample3 extends TeamsActivityHandler {
                 });
             }
         });
+   }
+
+   private async handleMessageMentionMeOneOnOne(context: TurnContext): Promise<void> {
+      const mention = {
+         mentioned: context.activity.from,
+         text: `<at>${new TextEncoder().encode(context.activity.from.name)}</at>`,
+         type: "mention"
+      };
+
+      const replyActivity = MessageFactory.text(`Hi ${mention.text} from a 1:1 chat.`);
+      replyActivity.entities = [mention];
+      await context.sendActivity(replyActivity);
    }
 
 }

@@ -1,22 +1,22 @@
 {
-  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.8/MicrosoftTeams.schema.json",
-  "manifestVersion": "1.8",
-  "id": "{{APPLICATION_ID}}",
-  "version": "{{VERSION}}",
-  "packageName": "{{PACKAGE_NAME}}",
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.9",
+  "version": "1.0.0",
+  "id": "1a4200d2-bd6b-4b67-b4c3-5a6331ba400c",
+  "packageName": "com.microsoft.teams.dev",
   "developer": {
     "name": "Perper",
-    "websiteUrl": "https://{{HOSTNAME}}",
-    "privacyUrl": "https://{{HOSTNAME}}/privacy.html",
-    "termsOfUseUrl": "https://{{HOSTNAME}}/tou.html"
+    "websiteUrl": "https://www.perper.com",
+    "privacyUrl": "https://www.perper.com/privacy",
+    "termsOfUseUrl": "https://www.perper.com/termofuse"
   },
   "name": {
     "short": "botexample3",
     "full": "botexample3"
   },
   "description": {
-    "short": "TODO: add short description here",
-    "full": "TODO: add full description here"
+      "short": "the shortest description ever",
+      "full": "the shortest description ever ever veer "
   },
   "icons": {
     "outline": "icon-outline.png",
@@ -27,9 +27,10 @@
   "staticTabs": [],
   "bots": [
     {
-      "botId": "{{MICROSOFT_APP_ID}}",
+      "botId": "9b46dd2e-ea19-4902-982f-9659c1a68958",
       "needsChannelSelector": true,
       "isNotificationOnly": false,
+      "supportsFiles": false,
       "scopes": [
         "team",
         "personal",
@@ -45,6 +46,10 @@
             {
               "title": "Help",
               "description": "Shows help information"
+            },
+            {
+              "title": "MentionMe",
+              "description": "Sends message with @mention of the sender"
             }
           ]
         }
