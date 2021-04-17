@@ -155,15 +155,26 @@ export class Botexample3 extends TeamsActivityHandler {
 
     this.onMessageReaction(
       async (context: TurnContext): Promise<void> => {
-        const added = context.activity.reactionsAdded;
-        if (added && added[0]) {
-          await context.sendActivity({
-            textFormat: "xml",
-            text: `That was an interesting reaction (<b>${added[0].type}</b>)`
+        if (context.activity.reactionsAdded) {
+          context.activity.reactionsAdded.forEach(async (reaction) => {
+            if (reaction.type === "like") {
+              await context.sendActivity("Thank you!");
+            }
           });
         }
       }
     );
+    // this.onMessageReaction(
+      // async (context: TurnContext): Promise<void> => {
+        // const added = context.activity.reactionsAdded;
+        // if (added && added[0]) {
+          // await context.sendActivity({
+            // textFormat: "xml",
+            // text: `That was an interesting reaction (<b>${added[0].type}</b>)`
+          // });
+        // }
+      // }
+    // );
   }
 
   private async handleMessageMentionMeOneOnOne(
