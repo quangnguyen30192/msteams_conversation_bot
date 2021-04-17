@@ -9,7 +9,13 @@ import {
   ConversationState,
   ActivityTypes,
   TeamsActivityHandler,
-  MessageFactory
+  MessageFactory,
+  ConversationReference,
+  ConversationResourceResponse,
+  ConversationParameters,
+  teamsGetChannelId,
+  Activity,
+  BotFrameworkAdapter,
 } from "botbuilder";
 import HelpDialog from "./dialogs/HelpDialog";
 import WelcomeCard from "./dialogs/WelcomeDialog";
@@ -61,6 +67,9 @@ export class Botexample3 extends TeamsActivityHandler {
                   case "delete":
                     await this.deleteCardActivity(context);
                     break;
+                  case "newconversation":
+                    const message = MessageFactory.text("This will be the first message in the new thread");
+                    await this.teamsCreateConversation(context, message);
                   default:
                     break;
                 }
@@ -118,6 +127,11 @@ export class Botexample3 extends TeamsActivityHandler {
                       type: "Action.Submit",
                       title: "Update card",
                       data: value
+                    },
+                    {
+                      type: "Action.Submit",
+                      title: "Create a new thread in this channel",
+                      data: { cardAction: "newconversation" }
                     }
                   ]
                 });
@@ -265,5 +279,30 @@ export class Botexample3 extends TeamsActivityHandler {
 
   private async deleteCardActivity(context): Promise<void> {
     await context.deleteActivity(context.activity.replyToId);
+  }
+
+  private async teamsCreateConversation(context: TurnContext, message: Partial<Activity>): Promise<[ConversationReference, string]> {
+    // get a reference to the bot adapter & create a connection to the Teams API
+    const adapter = <BotFrameworkAdapter>context.adapter;
+    const connectorClient = adapter.createConnectorClient(context.activity.serviceUrl);
+
+    // set current teams channel in new conversation parameters
+    const teamsChannelId = teamsGetChannelId(context.activity);
+    const conversationParameters: ConversationParameters = {
+      isGroup: true,
+      channelData: {
+        channel: {
+          id: teamsChannelId
+        }
+      },
+      activity: message as Activity,
+      bot: context.activity.recipient
+    };
+
+    // create conversation and send message
+    const conversationResourceResponse: ConversationResourceResponse = await connectorClient.conversations.createConversation(conversationParameters);
+    const conversationReference = <ConversationReference>TurnContext.getConversationReference(context.activity);
+    conversationReference.conversation.id = conversationResourceResponse.id;
+    return [conversationReference, conversationResourceResponse.activityId];
   }
 }
