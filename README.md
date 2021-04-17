@@ -1,4 +1,8 @@
 Refer: [Create interactive conversational bots for Microsoft Teams - Learn | Microsoft Docs](https://docs.microsoft.com/en-us/learn/modules/msteams-conversation-bots/)
+- Creating conversational bots for Microsoft Teams
+- Bots in Microsoft Teams channels and group chats
+- Proactive messages from bots
+
 # botexample3 - Microsoft Teams App
 
 Generate a Microsoft Teams application.
